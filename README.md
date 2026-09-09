@@ -14,3 +14,7 @@ Normally, while doing homework at home, my cat likes to sit on my lap or desk an
 
 ![Prince napping on my laptop](https://drive.google.com/file/d/1Crm_lBvyNGsSHVIj6KhwSzeHOoKhhoFQ/view?usp=drive_link)
 ![Prince and pua](https://drive.google.com/file/d/1m-EBtfcY95lkyYLNjpRCL-zyp7w5KXwL/view?usp=drive_link)
+
+### My interests
+
+Outside of school, I love spending time in the ocean. When Iʻm not on a computer, youʻll usually find me diving, paddling, surfing, or just having a nice ocean float to de-stress.
