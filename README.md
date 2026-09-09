@@ -12,8 +12,9 @@ I am stoked about taking this course because I have always wanted to be more flu
 
 Normally, while doing homework at home, my cat likes to sit on my lap or desk and work with me, so I figured I should introduce him to you all here. His name is Prince and heʻs very tiny and soft.
 
-![Prince napping on my laptop](https://drive.google.com/file/d/1Crm_lBvyNGsSHVIj6KhwSzeHOoKhhoFQ/view?usp=drive_link)
-![Prince and pua](https://drive.google.com/file/d/1m-EBtfcY95lkyYLNjpRCL-zyp7w5KXwL/view?usp=drive_link)
+![Prince napping on my laptop](Prince_laptop_nap.jpg)
+![Prince and pua](Prince_and_pua)
+![Prince in a papale](Prince_in_a_papale)
 
 ### My interests
 
