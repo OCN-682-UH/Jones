@@ -1,4 +1,4 @@
-## This code is for practicing creating a new plot for homework
+## This code is for practicing creating a new plot for the online lecture
 ##
 ## Created by: Ellie S Jones
 ## Created on: 2026-09-14
