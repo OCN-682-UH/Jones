@@ -8,7 +8,6 @@
 ## Load Libraries
 library(tidyverse)
 library(here)
-library(fishualize)
 library(praise)
 
 ## Load and look at data
