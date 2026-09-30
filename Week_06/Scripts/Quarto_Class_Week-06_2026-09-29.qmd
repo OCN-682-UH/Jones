@@ -1,0 +1,24 @@
+---
+title: "Learning Quarto in Week 6"
+author: "Ellie S Jones"
+format: html
+---
+
+## My document
+```{r}
+#| warning: false
+#| message: false
+
+## Load libraries
+library(tidyverse)
+library(here)
+library(palmerpenguins)
+library(dplyr)
+
+## View data
+view(penguins)
+
+```
+
+There are `r nrow(penguins)` rows of penguin data in the **Palmer Penguins** dataset showcasing data from `r n_distinct(penguins$species)` species.
+
