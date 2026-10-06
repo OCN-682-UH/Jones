@@ -70,10 +70,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="Quarto_HW_Week-06_2026-10-05_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="Quarto_HW_Week-06_2026-10-05_files/libs/quarto-html/anchor.min.js"></script>
 <link href="Quarto_HW_Week-06_2026-10-05_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="Quarto_HW_Week-06_2026-10-05_files/libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="Quarto_HW_Week-06_2026-10-05_files/libs/quarto-html/quarto-syntax-highlighting-dark-0a6b7249c26820e032cb0bd839ff02b1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="Quarto_HW_Week-06_2026-10-05_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="Quarto_HW_Week-06_2026-10-05_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="Quarto_HW_Week-06_2026-10-05_files/libs/bootstrap/bootstrap-4fab7da059a6feec3e3641fb57eee7e2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="Quarto_HW_Week-06_2026-10-05_files/libs/bootstrap/bootstrap-b71398bc03195a74baf08781ff59f044.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="dark">
 <script src="Quarto_HW_Week-06_2026-10-05_files/libs/kePrint-0.0.1/kePrint.js"></script>
 
 <link href="Quarto_HW_Week-06_2026-10-05_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
@@ -140,50 +140,55 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <details class="code-fold">
 <summary>Click here to display code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load data</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>CondData <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">"Week_05"</span>,<span class="st">"Data"</span>,<span class="st">"CondData.csv"</span>))</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>DepthData <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">here</span>(<span class="st">"Week_05"</span>,<span class="st">"Data"</span>,<span class="st">"DepthData.csv"</span>))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>CondData <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"CondData.csv"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>DepthData <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"DepthData.csv"</span>)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="do">## View data</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">view</span>(CondData)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="do">## Join data</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>CondData <span class="ot">&lt;-</span> CondData <span class="sc">|&gt;</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">mdy_hms</span>(date),</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">date =</span> <span class="fu">round_date</span>(date,<span class="st">"10 secs"</span>))</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>DepthData <span class="ot">&lt;-</span> DepthData <span class="sc">|&gt;</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date=</span><span class="fu">ymd_hms</span>(date))</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>JoinCondDepth <span class="ot">&lt;-</span> CondData <span class="sc">|&gt;</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(DepthData,<span class="at">by=</span><span class="st">"date"</span>)</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="fu">view</span>(JoinCondDepth)        <span class="co"># Utilize joined conductivity and depth data from Week 5 homework</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="do">## Create a plot</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>JCD_clean <span class="ot">&lt;-</span> JoinCondDepth <span class="sc">|&gt;</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Salinity <span class="sc">&gt;</span> <span class="dv">30</span>) <span class="sc">|&gt;</span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Depth <span class="sc">&gt;</span> <span class="fl">0.2</span>) <span class="co"># Filter out the two outlier data points below 30 PSU</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>JCD_clean <span class="sc">|&gt;</span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols=</span><span class="fu">c</span>(Temperature,Salinity),</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"variable"</span>,</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"value"</span>) <span class="sc">|&gt;</span>      <span class="co"># Pivot dataset longer</span></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>value,<span class="at">y=</span>Depth,<span class="at">color=</span>variable)) <span class="sc">+</span>    <span class="co"># Create a data plot with depth against temperature and salinity</span></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>variable, <span class="at">scales =</span> <span class="st">"free_x"</span>) <span class="sc">+</span>   <span class="co"># Wrap to create two plots</span></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_reverse</span>() <span class="sc">+</span>   <span class="co"># Reverse the scale so the deepest depth is at the bottom and shallowest is at the top of the y axis</span></span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Salinity and Temperature of Water Chemistry Samples by Depth"</span>,</span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="cn">NULL</span>,</span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Depth (m)"</span>)<span class="sc">+</span></span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>   <span class="fu">scale_color_fish_d</span>(<span class="at">option=</span><span class="st">"Etheostoma_barrenense"</span>)<span class="sc">+</span></span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position=</span><span class="st">"none"</span></span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="fu">view</span>(JCD_clean)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">view</span>(DepthData)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="do">## Mutate and then join both datasets to compare temperature and salinity to depth</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>CondData <span class="ot">&lt;-</span> CondData <span class="sc">|&gt;</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">mdy_hms</span>(date),</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">date =</span> <span class="fu">round_date</span>(date,<span class="st">"10 secs"</span>))</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>DepthData <span class="ot">&lt;-</span> DepthData <span class="sc">|&gt;</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date=</span><span class="fu">ymd_hms</span>(date))</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>JoinCondDepth <span class="ot">&lt;-</span> CondData <span class="sc">|&gt;</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(DepthData,<span class="at">by=</span><span class="st">"date"</span>)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="fu">view</span>(JoinCondDepth)                    <span class="co"># Utilize joined conductivity and depth data from Week 5 homework</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="do">## Create a plot comparing salinity and temperature by depth</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>JCD_clean <span class="ot">&lt;-</span> JoinCondDepth <span class="sc">|&gt;</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Salinity <span class="sc">&gt;</span> <span class="dv">30</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Depth <span class="sc">&gt;</span> <span class="fl">0.2</span>)                  <span class="co"># Filter out the outlier data points in salinity below 30 PSU and in depth above 0.2 so all data points are visible on the wrapped plots</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>JCD_clean <span class="sc">|&gt;</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols=</span><span class="fu">c</span>(Temperature,Salinity),</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"variable"</span>,</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"value"</span>) <span class="sc">|&gt;</span>             <span class="co"># Pivot dataset longer to wrap in two plots</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>value,<span class="at">y=</span>Depth,<span class="at">color=</span>variable)) <span class="sc">+</span>    <span class="co"># Create a data plot with depth against temperature and salinity</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>variable, <span class="at">scales =</span> <span class="st">"free_x"</span>,         <span class="co"># Wrap to create two plots</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>             <span class="at">labeller =</span> <span class="fu">as_labeller</span>(<span class="fu">c</span>(</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>               <span class="at">Temperature =</span> <span class="st">"Temperature (°C)"</span>,</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>               <span class="at">Salinity =</span> <span class="st">"Salinity (PSU)"</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>             ))</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>             ) <span class="sc">+</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_reverse</span>() <span class="sc">+</span>                              <span class="co"># Reverse the y axis scale so the deepest depth is at the bottom and shallowest is at the top of the y axis</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Salinity and Temperature of Water Chemistry Samples by Depth"</span>,</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Depth (m)"</span>)<span class="sc">+</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>   <span class="fu">scale_color_fish_d</span>(<span class="at">option=</span><span class="st">"Etheostoma_barrenense"</span>)<span class="sc">+</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()<span class="sc">+</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position=</span><span class="st">"none"</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-sal-temp-plot" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-sal-temp-plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Quarto_HW_Week-06_2026-10-05_files/figure-html/fig-sal-temp-plot-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
+<img src="Quarto_HW_Week-06_2026-10-05_files/figure-html/fig-sal-temp-plot-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sal-temp-plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;1: Water chemistry samples collected on January 15, 2021 by Nyssa Silbiger
@@ -192,7 +197,7 @@ Figure&nbsp;1: Water chemistry samples collected on January 15, 2021 by Nyssa Si
 </div>
 </div>
 </div>
-<p>Based on these data, samples taken at slightly lower depths seem to be warmer and have slightly lower salinity (see <a href="#fig-sal-temp-plot" class="quarto-xref">Figure&nbsp;1</a>). This could be indicative of a freshwater seep or other water input source in the location where these data were collected.</p>
+<p>Based on these data shown in <a href="#fig-sal-temp-plot" class="quarto-xref">Figure&nbsp;1</a>, samples taken at slightly lower depths seem to be warmer and have slightly lower salinity. This could be a signal of submarine groundwater discharge or a freshwater seep, but I would expect that (based on my limited knowledge of SGD) to be colder and less saline. Due to the only slight variation in depth and variables, it is likely just showing slight shifts in the water as the samples were being collected.</p>
 </section>
 <section id="the-following-table-shows-average-temperature-and-salinity-by-depth-of-water-samples." class="level6">
 <h6 class="anchored" data-anchor-id="the-following-table-shows-average-temperature-and-salinity-by-depth-of-water-samples.">The following table shows average temperature and salinity by depth of water samples.</h6>
@@ -202,16 +207,14 @@ Figure&nbsp;1: Water chemistry samples collected on January 15, 2021 by Nyssa Si
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Create a table</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>JCD_clean <span class="sc">|&gt;</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Depth) <span class="sc">|&gt;</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">salmean =</span> <span class="fu">mean</span>(Salinity, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">tempmean =</span> <span class="fu">mean</span>(Temperature, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kbl</span>() <span class="sc">|&gt;</span>  <span class="co"># Use to turn data into tables using kableExtra</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_classic</span>() <span class="sc">|&gt;</span>  <span class="co"># Add a theme to the table</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">column_spec</span>(<span class="dv">1</span>,<span class="at">bold=</span><span class="cn">TRUE</span>) <span class="co"># Call out a specific row in the table</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="do">## I am very tired and it is very late but I enjoy coding very much</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">praise</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="st">"Mean Salinity (PSU)"</span> <span class="ot">=</span> <span class="fu">mean</span>(Salinity, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="st">"Mean Temperature (°C)"</span> <span class="ot">=</span> <span class="fu">mean</span>(Temperature, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kbl</span>() <span class="sc">|&gt;</span>                         <span class="co"># Use to turn data into tables using kableExtra</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_material_dark</span>() <span class="sc">|&gt;</span>         <span class="co"># Add a theme to the table</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">column_spec</span>(<span class="dv">1</span>,<span class="at">bold=</span><span class="cn">TRUE</span>) <span class="sc">|&gt;</span>      <span class="co"># Bold the column headers</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">c</span>(<span class="st">"hover"</span>,<span class="st">"condensed"</span>),</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "You are perfect!"</code></pre>
-</div>
 <div id="tbl-sal-temp-table" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-sal-temp-table-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -219,12 +222,12 @@ Table&nbsp;1: Mean temperature and salinity by depth
 </figcaption>
 <div aria-describedby="tbl-sal-temp-table-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="lightable-classic cell caption-top table table-sm table-striped small">
+<table class="lightable-material-dark table table-hover table-condensed cell caption-top table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">Depth</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">salmean</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">tempmean</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Mean Salinity (PSU)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Mean Temperature (°C)</th>
 </tr>
 </thead>
 <tbody>

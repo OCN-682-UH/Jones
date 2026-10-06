@@ -7,7 +7,7 @@ format:
     html:
       code-fold: true
       code-summary: "Click here to display code"
-      theme: minty
+      theme: solar
 ---
 ```{r}
 #| warning: false
@@ -29,18 +29,20 @@ library(praise)
 ```{r}
 #| warning: false
 #| message: false
+#| out-width: "70%"
 #| fig-align: "center"
 #| label: fig-sal-temp-plot
 #| fig-cap: "Water chemistry samples collected on January 15, 2021 by Nyssa Silbiger"
 
 ## Load data
-CondData <- read_csv(here("Week_05","Data","CondData.csv"))
-DepthData <- read.csv(here("Week_05","Data","DepthData.csv"))
+CondData <- read.csv("CondData.csv")
+DepthData <- read.csv("DepthData.csv")
 
 ## View data
 view(CondData)
+view(DepthData)
 
-## Join data
+## Mutate and then join both datasets to compare temperature and salinity to depth
 CondData <- CondData |>
   mutate(date = mdy_hms(date),
          date = round_date(date,"10 secs"))
@@ -48,33 +50,36 @@ DepthData <- DepthData |>
   mutate(date=ymd_hms(date))
 JoinCondDepth <- CondData |>
   inner_join(DepthData,by="date")
-view(JoinCondDepth)        # Utilize joined conductivity and depth data from Week 5 homework
+view(JoinCondDepth)                    # Utilize joined conductivity and depth data from Week 5 homework
 
-## Create a plot
+## Create a plot comparing salinity and temperature by depth
 JCD_clean <- JoinCondDepth |>
   filter(Salinity > 30) |>
-  filter(Depth > 0.2) # Filter out the two outlier data points below 30 PSU
+  filter(Depth > 0.2)                  # Filter out the outlier data points in salinity below 30 PSU and in depth above 0.2 so all data points are visible on the wrapped plots
 JCD_clean |>
   pivot_longer(cols=c(Temperature,Salinity),
                names_to = "variable",
-               values_to = "value") |>      # Pivot dataset longer
+               values_to = "value") |>             # Pivot dataset longer to wrap in two plots
   ggplot(aes(x=value,y=Depth,color=variable)) +    # Create a data plot with depth against temperature and salinity
   geom_point() +
-  facet_wrap(~variable, scales = "free_x") +   # Wrap to create two plots
-  scale_y_reverse() +   # Reverse the scale so the deepest depth is at the bottom and shallowest is at the top of the y axis
+  facet_wrap(~variable, scales = "free_x",         # Wrap to create two plots
+             labeller = as_labeller(c(
+               Temperature = "Temperature (°C)",
+               Salinity = "Salinity (PSU)"
+             ))
+             ) +
+  scale_y_reverse() +                              # Reverse the y axis scale so the deepest depth is at the bottom and shallowest is at the top of the y axis
   labs(title = "Salinity and Temperature of Water Chemistry Samples by Depth",
        x = NULL,
        y = "Depth (m)")+
    scale_color_fish_d(option="Etheostoma_barrenense")+
-  theme_minimal()+
+  theme_bw()+
   theme(
     plot.title = element_text(size = 14, face = "bold"),
     legend.position="none"
   )
-view(JCD_clean)
-
 ```
-Based on these data, samples taken at slightly lower depths seem to be warmer and have slightly lower salinity (see @fig-sal-temp-plot). This could be indicative of a freshwater seep or other water input source in the location where these data were collected. 
+Based on these data shown in @fig-sal-temp-plot, samples taken at slightly lower depths seem to be warmer and have slightly lower salinity. This could be a signal of submarine groundwater discharge or a freshwater seep, but I would expect that (based on my limited knowledge of SGD) to be colder and less saline. Due to the only slight variation in depth and variables, it is likely just showing slight shifts in the water as the samples were being collected.
 
 ###### The following table shows average temperature and salinity by depth of water samples.
 
@@ -87,13 +92,13 @@ Based on these data, samples taken at slightly lower depths seem to be warmer an
 ## Create a table
 JCD_clean |>
   group_by(Depth) |>
-  summarise(salmean = mean(Salinity, na.rm = TRUE), tempmean = mean(Temperature, na.rm = TRUE)) |>
-  kbl() |>  # Use to turn data into tables using kableExtra
-  kable_classic() |>  # Add a theme to the table
-  column_spec(1,bold=TRUE) # Call out a specific row in the table
-
-## I am very tired and it is very late but I enjoy coding very much
-praise()
+  summarise("Mean Salinity (PSU)" = mean(Salinity, na.rm = TRUE), "Mean Temperature (°C)" = mean(Temperature, na.rm = TRUE)) |>
+  kbl() |>                         # Use to turn data into tables using kableExtra
+  kable_material_dark() |>         # Add a theme to the table
+  column_spec(1,bold=TRUE) |>      # Bold the column headers
+  kable_styling(bootstrap_options = 
+                  c("hover","condensed"),
+                full_width = FALSE)
 ```
 
 #### Mahalo for reading my Quarto doc! 
