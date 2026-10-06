@@ -1,0 +1,60 @@
+---
+title: "Quarto Online Week 06"
+author: "Ellie S Jones"
+
+format:
+    html:
+      code-fold: true
+      code-summary: "Click here to display code"
+      theme: minty
+---
+
+## Penguin Plot Practice
+###### *Did you like my alliteration?*
+
+```{r}
+#| warning: false
+#| message: false
+#| fig-height: 3
+#| fig-width: 4
+#| fig-align: "center"
+#| label: fig-penguin-plot
+#| fig-cap: "Flipper length of penguins in PalmerPenguins dataset by species"
+
+## Load libraries
+library(tidyverse)
+library(here)
+library(palmerpenguins)
+library(dplyr)
+library(ggplot2)
+library(kableExtra)
+
+## View data
+view(penguins)
+
+## Create a plot
+penguins |>
+  ggplot(aes(x=species,y=flipper_length_mm))+
+  geom_jitter()
+```
+As shown in @fig-penguin-plot, Gentoo penguins have the longest flippers of the three species. 
+
+## Penguin Table Practice
+###### *Less alliteration this time...*
+
+```{r}
+#| warning: false
+#| message: false
+#| label: tbl-penguin-table
+#| tbl-cap: "Mean bill length of penguins in the PalmerPenguins dataset by species"
+
+## Create a table
+penguins |>
+  group_by(species) |>
+  summarise(flipmean = mean(flipper_length_mm, na.rm = TRUE)) |>
+  kbl() |>  # Use to turn data into tables using kableExtra
+  kable_classic() |>  # Add a theme to the table
+  row_spec(3,bold=TRUE,background="cyan") # Call out a specific row in the table
+```
+
+Mean flipper lengths are shown in @tbl-penguin-table by species.
