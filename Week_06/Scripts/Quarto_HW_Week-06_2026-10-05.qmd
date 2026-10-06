@@ -1,0 +1,99 @@
+---
+title: "Quarto Homework Week 6"
+author: "Ellie S Jones"
+date: "October 5, 2026"
+
+format:
+    html:
+      code-fold: true
+      code-summary: "Click here to display code"
+      theme: minty
+---
+```{r}
+#| warning: false
+#| message: false
+
+## Load libraries
+library(tidyverse)
+library(here)
+library(dplyr)
+library(ggplot2)
+library(kableExtra)
+library(fishualize)
+library(praise)
+```
+
+## Water Chemistry Data
+###### The following plot compares temperature and salinity by depth of water samples. 
+
+```{r}
+#| warning: false
+#| message: false
+#| fig-align: "center"
+#| label: fig-sal-temp-plot
+#| fig-cap: "Water chemistry samples collected on January 15, 2021 by Nyssa Silbiger"
+
+## Load data
+CondData <- read_csv(here("Week_05","Data","CondData.csv"))
+DepthData <- read.csv(here("Week_05","Data","DepthData.csv"))
+
+## View data
+view(CondData)
+
+## Join data
+CondData <- CondData |>
+  mutate(date = mdy_hms(date),
+         date = round_date(date,"10 secs"))
+DepthData <- DepthData |>
+  mutate(date=ymd_hms(date))
+JoinCondDepth <- CondData |>
+  inner_join(DepthData,by="date")
+view(JoinCondDepth)        # Utilize joined conductivity and depth data from Week 5 homework
+
+## Create a plot
+JCD_clean <- JoinCondDepth |>
+  filter(Salinity > 30) |>
+  filter(Depth > 0.2) # Filter out the two outlier data points below 30 PSU
+JCD_clean |>
+  pivot_longer(cols=c(Temperature,Salinity),
+               names_to = "variable",
+               values_to = "value") |>      # Pivot dataset longer
+  ggplot(aes(x=value,y=Depth,color=variable)) +    # Create a data plot with depth against temperature and salinity
+  geom_point() +
+  facet_wrap(~variable, scales = "free_x") +   # Wrap to create two plots
+  scale_y_reverse() +   # Reverse the scale so the deepest depth is at the bottom and shallowest is at the top of the y axis
+  labs(title = "Salinity and Temperature of Water Chemistry Samples by Depth",
+       x = NULL,
+       y = "Depth (m)")+
+   scale_color_fish_d(option="Etheostoma_barrenense")+
+  theme_minimal()+
+  theme(
+    plot.title = element_text(size = 14, face = "bold"),
+    legend.position="none"
+  )
+view(JCD_clean)
+
+```
+Based on these data, samples taken at slightly lower depths seem to be warmer and have slightly lower salinity (see @fig-sal-temp-plot). This could be indicative of a freshwater seep or other water input source in the location where these data were collected. 
+
+###### The following table shows average temperature and salinity by depth of water samples.
+
+```{r}
+#| warning: false
+#| message: false
+#| label: tbl-sal-temp-table
+#| tbl-cap: "Mean temperature and salinity by depth"
+
+## Create a table
+JCD_clean |>
+  group_by(Depth) |>
+  summarise(salmean = mean(Salinity, na.rm = TRUE), tempmean = mean(Temperature, na.rm = TRUE)) |>
+  kbl() |>  # Use to turn data into tables using kableExtra
+  kable_classic() |>  # Add a theme to the table
+  column_spec(1,bold=TRUE) # Call out a specific row in the table
+
+## I am very tired and it is very late but I enjoy coding very much
+praise()
+```
+
+#### Mahalo for reading my Quarto doc! 
