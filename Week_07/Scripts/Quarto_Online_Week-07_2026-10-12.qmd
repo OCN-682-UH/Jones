@@ -1,0 +1,175 @@
+---
+title: "Learning Mapping Online in Week 7"
+author: "Ellie S Jones"
+date: "October 12, 2026"
+
+format:
+    html:
+      code-fold: true
+      code-summary: "Click here to display code"
+      theme: solar
+---
+
+## This week online, we are learning how to download maps from satellite services
+
+```{r}
+#| warning: false
+#| message: false
+
+## Load libraries
+library(tidyverse)
+library(here)
+library(sf)
+library(maptiles)
+library(tidyterra)
+library(leaflet)
+library(tidygeocoder)
+library(ggspatial)
+library(praise)
+```
+```{r}
+## Load and view data
+ChemData <- read_csv(here("Week_07", "Data", "chemicaldata_maunalua.csv"))
+
+glimpse(ChemData)
+```
+
+## Step 1 - Define the area of interest
+```{r}
+## Define your bounding box for the spatial data
+wailupe_bbox <- st_as_sfc(st_bbox(c(
+  xmin = -157.772, ymin = 21.267,
+  xmax = -157.752, ymax = 21.281),
+  crs = 4326))
+```
+
+## Step 2 - Download the tiles
+```{r}
+## Download the tiles for your map
+tiles_satellite <- get_tiles(wailupe_bbox,
+  provider = "Esri.WorldImagery",
+  zoom = 16,
+  crop = TRUE,
+  cachedir = here("Week_07","Data","tiles_cache"))
+```
+
+## Step 3 - Plot the tiles
+```{r}
+## Plot the tiles using ggplot and geom_spatraster_rgb
+ggplot() +
+  geom_spatraster_rgb(data = tiles_satellite) +
+  coord_sf(crs = 4326) +
+  theme_minimal()
+```
+
+## Practice deriving the bounding box from the data itself
+```{r}
+## Convert your data frame to an sf object
+ChemData_sf <- st_as_sf(ChemData,
+                         coords = c("Long", "Lat"),
+                         crs = 4326)
+```
+```{r}
+## Get your bounding box and add a small buffer so points are not at the edges of the map
+bbox_chem <- st_bbox(ChemData_sf) + c(-0.004, -0.004, 0.004, 0.004)
+```
+```{r}
+## Download the tiles for your specified bounding box
+Map_satellite <- get_tiles(
+  st_as_sfc(bbox_chem),
+  provider = "Esri.WorldImagery",
+  zoom = 15,
+  crop = TRUE,
+  cachedir = here("Week_07", "data", "tiles_cache")
+)
+```
+
+## Overlay point data onto a tile basemap
+```{r}
+## Polish your point data on your map
+ggplot() +
+  geom_spatraster_rgb(data = Map_satellite) +
+  geom_point(data = ChemData,
+             aes(x = Long, y = Lat,
+                 color = Salinity),
+             size = 4) +
+  scale_color_viridis_c(name = "Salinity (ppt)") +
+  annotation_scale(location = "bl",        
+    bar_cols = c("yellow", "white")) +
+  annotation_north_arrow(location = "tl") +
+  coord_sf(crs = 4326) +
+  labs(title = "Maunalua Bay — Water Chemistry",
+       caption = "Basemap: ESRI World Imagery") +
+  theme_minimal()
+
+## Save your map
+ggsave(here("Week_07", "Outputs", "maunalua_map.pdf"), width = 8, height = 6)
+```
+
+## Create an interactive leaflet map
+```{r}
+## Create a leaflet centered with setView on Wailupe
+leaflet() |>
+  addProviderTiles(providers$Esri.WorldImagery) |>
+  setView(lng = -157.762, lat = 21.274, zoom = 14)
+
+## Add a color palette to convert numeric values to hex colors
+pal <- colorNumeric(
+  palette = "viridis",            # any RColorBrewer or viridis palette name
+  domain = ChemData$Salinity      # the full range of values to map
+)
+
+## Use it by calling pal to see what hex colors a certain salinity would get
+pal(30)
+
+## Add data points with color
+leaflet(ChemData) |>           # pass data frame here
+  addProviderTiles(providers$Esri.WorldImagery) |>
+  addCircleMarkers(
+    lng = ~Long, lat = ~Lat,   # which columns are coordinates
+    color = ~pal(Salinity),    # apply our color function to Salinity
+    radius = 6,
+    fillOpacity = 0.9,
+    popup = ~paste("Salinity:", Salinity, "ppt",  # click a point to see this
+                   "<br>Site:", Site)) |>
+  addLegend(
+    pal = pal,                 # the same color function
+    values = ~Salinity,        # which column drives the legend
+    title = "Salinity (ppt)",
+    position = "bottomright")
+```
+
+## Practice geocoding
+```{r}
+## Practice calling UH Mānoa for geocoding
+geo("University of Hawaii at Manoa", method = "osm")
+
+## Create a tribble of places
+oahu_sites <- tribble(
+  ~place,
+  "University of Hawaii at Manoa",
+  "Honolulu International Airport",
+  "Pearl Harbor National Memorial, Hawaii",
+  "Diamond Head State Monument, Hawaii"
+)
+
+## Call Oʻahu sites you created with the tribble
+oahu_geocoded <- oahu_sites |>
+  geocode(place, method = "osm")   # geocode the 'place' column
+
+## Look at your tbl to see the coordinates of each place you called
+oahu_geocoded
+```
+
+## Map your geocoded locations
+```{r}
+leaflet(oahu_geocoded) |>
+  addProviderTiles(providers$Esri.WorldImagery) |>
+  addMarkers(
+    lng = ~long, lat = ~lat,   # tidygeocoder always returns 'lat' and 'long'
+    label = ~place)            # hover to see place name
+```
+
+## That's all for today! Yay mapping!
+praise()
+

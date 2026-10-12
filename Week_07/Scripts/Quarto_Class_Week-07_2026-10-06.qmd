@@ -1,0 +1,160 @@
+---
+title: "Learning Mapping in Week 7"
+author: "Ellie S Jones"
+format: html
+---
+
+## Load libraries and read in data to utilize in this week's class
+
+```{r}
+#| warning: false
+#| message: false
+
+## Load libraries
+library(tidyverse)
+library(here)
+library(maps)
+library(mapdata)
+library(mapproj)
+library(fishualize)
+library(praise)
+```
+
+```{r}
+## Read in data
+# Population in California by county
+popdata <- read_csv(here("Week_07", "Data", "CApopdata.csv"))
+
+# Seastar counts at field sites in California
+stars <- read_csv(here("Week_07", "Data", "stars.csv"))
+
+# View data
+view(popdata)
+view(stars)
+```
+
+## Practice with pulling map polygon boundaries and creating a map
+```{r}
+# Pull map polygon boundaries for the world
+world <- map_data("world")
+
+# Make a map of the world
+ggplot()+
+  geom_polygon(data = world,
+               aes(x = long, y = lat,
+                   group = group,
+                   fill = region),
+               color = "black") +
+  guides(fill = "none") +
+  theme(panel.background =
+          element_rect(fill = "lightblue")) +
+  coord_map(projection = "mercator",
+            xlim = c(-180,180))
+
+# Yay, I made a map!
+praise()
+```
+## Practice making a state map
+
+```{r}
+#| warning: false
+#| message: false
+#| label: fig-CA-map
+
+## Filter states dataset to California
+states <- map_data("state")
+CA_data <- states |>
+  filter(region == "california")
+view(CA_data)
+
+## Make a map of California
+ggplot()+
+  geom_polygon(data = CA_data,
+               aes(x = long, y = lat,
+                   group = group),
+               color="black")+
+  coord_map()+
+  theme_void()
+```
+@fig-CA-map shows a simple map of California. Next, we are going to add some data onto the map.
+
+## Practice adding data onto a map
+In this section, we are adding county population data to our map. First, we need to pull county data and check the population data. 
+```{r}
+#| warning: false
+#| message: false
+
+## Pull county polygon data for California
+counties <- map_data("county")
+head(counties)[1:3,]
+head(popdata)
+```
+Next, we need to make the column names of the county and population data match in order to join them.
+```{r}
+## Create dataframe with population and county data in California using renaming and joining
+CApop_county <- popdata |>
+  select("subregion" = County, Population) |>   # Rename columns to match counties
+  inner_join(counties) |>
+  filter(region == "california")                # Make sure it reads only counties from California, since some county names repeat in other states
+head(CApop_county)
+```
+Now that we have our joined data of population and counties within California, we will make a map of California with the dataframe we just created. 
+```{r}
+## Create a map of California with population by county
+ggplot() +
+  geom_polygon(data = CApop_county,
+               aes(x = long, y = lat,
+                   group = group,
+                   fill = Population),
+               color = "black") +
+  coord_map() +
+  theme_void() +
+  scale_fill_gradient(transform = "log10")   # Use log10 to compress the color scale so less-populated counties are still visible alongside Los Angeles
+
+## What a fun map!
+praise()
+```
+Next, we are going to take this map we just created and layer points of seastar data on top.
+```{r}
+## Look at seastar dataset
+head(stars)
+
+## Use same map from the previous step and add sea star data
+ggplot() +
+  geom_polygon(data = CApop_county,
+               aes(x = long, y = lat,
+                   group = group,
+                   fill = Population),
+               color = "black") +
+  geom_point(data = stars,
+             aes(x = long,
+                 y = lat,
+                 size = star_no)) +
+  coord_map() +
+  theme_void() +
+  scale_fill_gradient(transform = "log10") +
+  labs(size = "# stars/m2")
+
+## Save the map
+ggsave(here("Week_07","Outputs","CApop.pdf"))
+```
+The seastar dataset shows seastar counts (per m2) at field sites in Califonia. 
+
+Now that we have learned how to create basic maps using the maps package, we will learn about the sf and rnaturalearth packages!
+
+```{r}
+library(sf)
+library(rnaturalearth)
+library(rnaturalearthdata)
+
+## Call in world map in sf
+world_sf <- ne_countries(scale = "medium",
+                         returnclass = "sf")
+## Make a map in sf
+ggplot(world_sf) +
+  geom_sf(fill = "lightgray",
+          color = "white") +
+  coord_sf(crs = "+proj=robin") +
+  theme_void()
+```
+Pau with learning about how to make basic maps!
