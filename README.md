@@ -3,6 +3,7 @@
 ## My Quarto Links
 ##### Here is a list of my Quarto links for this class.
 [Week 6 Homework](https://ellieoftheocean-ocn-682---ellie-s-jones---week-6-homework.share.connect.posit.cloud/)
+[Week 7 Homework](https://01a1376f-5355-fc91-3fb6-49092cdf63fb.share.connect.posit.cloud/)
 
 ### My Research
 
