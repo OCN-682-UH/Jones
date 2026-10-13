@@ -29,7 +29,7 @@ library(praise)
 ```
 ```{r}
 ## Load and view data
-ChemData <- read_csv(here("Week_07", "Data", "chemicaldata_maunalua.csv"))
+ChemData <- read_csv(here("Week_07", "Scripts", "chemicaldata_maunalua.csv"))
 
 glimpse(ChemData)
 ```

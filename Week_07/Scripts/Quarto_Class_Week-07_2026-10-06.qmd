@@ -2,6 +2,7 @@
 title: "Learning Mapping in Week 7"
 author: "Ellie S Jones"
 format: html
+
 ---
 
 ## Load libraries and read in data to utilize in this week's class
@@ -23,10 +24,10 @@ library(praise)
 ```{r}
 ## Read in data
 # Population in California by county
-popdata <- read_csv(here("Week_07", "Data", "CApopdata.csv"))
+popdata <- read_csv(here("Week_07", "Scripts", "CAPopdata.csv"))
 
 # Seastar counts at field sites in California
-stars <- read_csv(here("Week_07", "Data", "stars.csv"))
+stars <- read_csv(here("Week_07", "Scripts", "stars.csv"))
 
 # View data
 view(popdata)

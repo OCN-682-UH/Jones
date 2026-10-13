@@ -8,3 +8,7 @@ appId: 01a113c9-7964-ba03-e3ff-178b193bfefc
 bundleId:
 url: https://connect.posit.cloud/ellieoftheocean/content/01a113c9-7964-ba03-e3ff-178b193bfefc
 version: 1
+quarto_version: 1.10.18
+quarto_engines: knitr
+asMultiple: FALSE
+asStatic: FALSE

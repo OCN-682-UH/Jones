@@ -1,0 +1,128 @@
+---
+title: "Mapping Homework for Week 7"
+author: "Ellie S Jones"
+date: "October 13, 2026"
+format:
+    html:
+      code-fold: true
+      code-summary: "Click here to display code"
+      theme: solar
+---
+
+## Mapping plastic pollution
+
+##### Load libraries and data
+```{r}
+#| warning: false
+#| message: false
+
+## Load libraries
+library(tidyverse)
+library(here)
+library(maps)
+library(mapdata)
+library(mapproj)
+library(fishualize)
+library(sf)
+library(maptiles)
+library(tidyterra)
+library(leaflet)
+library(tidygeocoder)
+library(ggspatial)
+library(praise)
+
+## Read in data with tidytuesdayR package
+tuesdata <- tidytuesdayR::tt_load('2021-01-26')
+plastics <- tuesdata$plastics
+
+## View data
+view(plastics)
+```
+
+## Filter plastics data to collect total plastics data per country for the year 2020
+```{r}
+## Filter data for country by 2020
+plastics_2020 <- plastics |>
+  filter(year == 2020) |>
+  group_by(country) |>
+  summarize(
+    grand_total = sum(grand_total, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+view(plastics_2020)
+```
+
+## Pull world map polygon boundaries
+```{r}
+#| warning: false
+#| message: false
+#| label: fig-world-map
+
+# Pull map polygon boundaries for the world
+world <- map_data("world")
+view(world)
+```
+
+## Join world map data with plastics data
+```{r}
+## Left join the world map with plastics, making column names match for region in world data and country in plastics data
+world_plastics <- world |>
+  left_join(
+    plastics_2020,
+    by = c("region" = "country")
+  )
+view(world_plastics)
+
+## That did not work well, so the country names likely do not match and I need to make them agree before joining
+unique(plastics_2020$country) # Check country names in the plastics data
+unique(world$region) # Check country names in the world data
+anti_join(plastics_2020,world |> distinct(region),
+          by = c("country" = "region"))      # Check which country names are not aligned
+
+## Found country names that are not aligned were USA, UK, and Korea, so I need to mutate those
+plastics_tojoin_2020 <- plastics_2020 |> mutate(
+  country = recode(country, "United States of America" = "USA", "United Kingdom of Great Britain & Northern Ireland" = "UK", "Korea" = "South Korea")
+)
+
+## Now, I will re-join the datasets
+world_plastics <- world |>
+  left_join(
+    plastics_tojoin_2020,
+    by = c("region" = "country")
+  )
+view(world_plastics)
+
+## Remove the NAs from the dataset
+wp_clean <- world_plastics |>
+  drop_na()
+view(wp_clean)
+```
+
+## Make a map of the world overlaid with plastics data from the Break Free from Plastic tidytuesday dataset
+```{r}
+# Make a map of the world with plastic data overlaid
+ggplot()+
+  geom_polygon(data = world, aes(
+    x = long, y = lat, group = group),
+    fill = "grey80",color = "black", linewidth = 0.1) +
+  geom_polygon(data = wp_clean,
+               aes(x = long, y = lat,
+                   group = group,
+                   fill = grand_total),
+               color = "black",
+               linewidth = 0.1) +
+  scale_fill_viridis_c(
+    option = "mako",
+    na.value = "grey80",
+    name = "Total Plastics"
+  ) +
+  coord_fixed(1.3) +
+  theme_void() +
+  labs(
+    title = "Plastic Waste Collected per Country in 2020",
+    subtitle = "From the Break Free From Plastic Global Cleanup Data",
+    caption = "Grey countries have no matching data"
+  )
+```
+
