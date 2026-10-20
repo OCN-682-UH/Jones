@@ -1,0 +1,18 @@
+---
+title: "Publish Testing with Mica"
+author: "Ellie S Jones"
+format: html
+
+warning: false
+message: false
+---
+
+```{r}
+library(tidyverse)
+library(here)
+
+chemdata <- read_csv(here("Testing Publishing with Mica","Data","chemicaldata_maunalua.csv"))
+
+view(chemdata)
+glimpse(chemdata)
+```
