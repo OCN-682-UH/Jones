@@ -1,0 +1,12 @@
+name: ocn_682_-_good_plotbad_plot_-_ellie_s_jones
+title: OCN 682 - Good Plot/Bad Plot - Ellie S Jones
+username: ellieoftheocean
+account: ellieoftheocean
+server: connect.posit.cloud
+hostUrl: https://api.connect.posit.cloud/v1
+appId: 01a1580f-7d67-d703-841f-cb3b2d2f1793
+bundleId:
+url: https://connect.posit.cloud/ellieoftheocean/content/01a1580f-7d67-d703-841f-cb3b2d2f1793
+version: 1
+asMultiple: FALSE
+asStatic: TRUE
