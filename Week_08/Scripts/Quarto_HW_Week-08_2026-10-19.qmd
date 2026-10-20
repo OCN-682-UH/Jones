@@ -1,0 +1,78 @@
+---
+title: "Function Homework for Week 8"
+author: "Ellie S Jones"
+date: "October 19, 2026"
+format:
+    html:
+      code-fold: true
+      code-summary: "Click here to display code"
+      theme: solar
+      
+warning: false
+message: false
+---
+
+## Let's make some fun functions! 
+
+```{r}
+## Load libraries
+library(tidyverse)
+library(here)
+library(ggplot2)
+library(fishualize)
+```
+
+## First, we make a dataframe with random data for fish length (in centimeters) for three pelagic species in Hawaiʻi
+```{r}
+fishlengths <- tibble(
+  ahi = runif(10,min=60,max=150),
+  ono = runif(10,min=100,max=165),
+  aku = runif(10,min=30,max=90))        # Set a dataframe with random numbers for fish lengths between average cm for three pelagic species in Hawaiʻi
+head(fishlengths)                       # View the data
+```
+
+## Then, we create a function to convert the lengths from centimeters to millimeters (in case any fisher **really** wanted to exaggerate how big their catch was)
+```{r}
+cm_to_mm <- function(x){x*10}     # Create the function
+cm_to_mm(5)                       # Test the function
+```
+## Now, we'll apply our function across the dataframe to make all the fishes seem bigger
+```{r}
+fishes_mm <- fishlengths |>
+  mutate(across(everything(),cm_to_mm))  # Use mutate to apply the function across the entire dataframe
+head(fishes_mm)                          # View the data to see if it worked
+```
+
+## Next, let's make a simple plot function for the average fish data from the tibble in centimeters.
+```{r}
+## Make the dataframe usable for a function
+avelengths <- fishlengths |>                  # Pivot the tibble to be able to plot the dataframe
+  pivot_longer(
+    cols = everything(),
+    names_to = "species",
+    values_to = "length_cm"
+  ) |>
+  group_by(species) |>
+  summarize(mean_length = mean(length_cm))    # Calculate the average length of each species based on the tibble
+head(avelengths)                              # View the data
+```
+
+```{r}
+## Create the function with flexible arguments
+fishplot <- function(data,x,y){
+  ggplot(data,aes(x={{x}},y={{y}},fill=species)) +
+    geom_col() +
+    labs(title = "Average Length of 3 Pelagic Fishes in Hawaiʻi",
+         x = "Species", y = "Average Fork Length (cm)") +
+    scale_fill_fish_d(option="Variola_louti") +
+    theme_minimal() +
+    theme(legend.position="none")
+}
+```
+
+```{r}
+## Test the function with the dataframe
+fishplot(data=avelengths,x=species,y=mean_length)
+ggsave(here("Week_08","Outputs","Pelagic_Fishes_Fork_Lengths.png"))
+```
+
