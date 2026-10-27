@@ -1,0 +1,74 @@
+---
+title: "Week 10 Factors Homework"
+author: "Ellie S Jones"
+date: "October 27, 2026"
+format:
+    html:
+      code-fold: true
+      code-summary: "Click here to display code"
+      theme: solar
+      
+warning: false
+message: false
+---
+
+# Factoring fun!
+
+## Loading libraries and importing data
+
+```{r}
+library(tidyverse)
+library(here)
+library(praise)
+```
+
+```{r}
+intd_datadict <- read_csv(here("Week_09","Data","intertidal_data_dictionary.csv"))
+intd_lat <- read_csv(here("Week_09","Data","intertidaldata_latitude.csv"))
+intd_data <- read_csv(here("Week_09","Data","intertidaldata.csv"))
+```
+
+### Viewing each dataset to decide which to work with
+```{r}
+view(intd_datadict)
+view(intd_lat)
+view(intd_data)
+```
+
+## Make a bar plot of site by latitude
+```{r}
+intd_lat |>
+  ggplot(aes(x=fct_reorder(Site,Latitude),y=Latitude)) +  # Make a basic barplot, then reorder by latitude in descending order so the northernmost site is highest
+  geom_col() +
+  labs(title="Eastern Pacific Intertidal Sampling Locations by Latitude",
+       x = "Intertidal Sampling Sites") +                          # Add plot title and fix axes names
+  coord_flip() +                                                   # Flip the barplot so plot reads northern to southern latitudes from top to bottom
+  scale_y_continuous(position="right") +                           # Shift y axis to the right so it is on top when the plot flips
+  theme_minimal()
+```
+## Let's make a map, because I love OR and CA and want to practice mapping
+```{r}
+library(ggplot2)
+library(dplyr)
+```
+
+```{r}
+west_coast_best_coast <- map_data("state") |>
+  filter(region == "oregon" | region == "california")
+```
+
+```{r}
+ggplot() +
+  geom_polygon(
+    data = west_coast_best_coast,
+    aes(x = long, y = lat, group = group),
+    fill = "darkcyan",
+    color = "black") +
+  coord_quickmap() +
+  labs(title = "Map of Oregon and California",
+       x="Longitude",
+       y="Latitude") +
+  theme_minimal()
+```
+
+

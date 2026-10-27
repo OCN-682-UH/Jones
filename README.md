@@ -6,7 +6,8 @@
 
 * [Week 6 Homework](https://ellieoftheocean-ocn-682---ellie-s-jones---week-6-homework.share.connect.posit.cloud/)
 * [Week 7 Homework](https://01a1376f-5355-fc91-3fb6-49092cdf63fb.share.connect.posit.cloud/)
-* [Week 8 Homework](https://01a1583c-85f0-d8ab-2fc7-d2e0ecfe99d5.share.connect.posit.cloud/)
+* [Week 8 Homework](https://01a1583c-85f0-d8ab-2fc7-d2e0ecfe99d5.share.connect.posit.cloud/) 
+* [Week 9 Homework](https://01a17f2f-f35b-8674-f54a-803e5eba8332.share.connect.posit.cloud/)
 
 ### My Research
 
