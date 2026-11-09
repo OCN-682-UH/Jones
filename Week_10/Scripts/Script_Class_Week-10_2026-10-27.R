@@ -112,7 +112,7 @@ sent_word_counts <- tidy_books |>
   inner_join(get_sentiments()) |>     # Keep only positive or negative words
   count(word,sentiment,sort=TRUE)     # Count the words with sentiments
 head(sent_word_counts)[1:3, ]
-sent_word_counts |>                                  # Use ggplot to visualize counts of positive and negative words in the books
+sent_word_plot <- sent_word_counts |>                                  # Use ggplot to visualize counts of positive and negative words in the books
   filter(n>150) |>                                   # Take only if there are over 150 instances of the books
   mutate(n=ifelse(sentiment=="negative",-n,n)) |>    # Add a column where if the word is negative, it makes the count negative
   mutate(word=reorder(word,n)) |>                    # Sort so it goes from largest to smallest effect
@@ -125,8 +125,8 @@ words <- cleaned_books |>
   count(word) |>           # Count all the words
   arrange(desc(n)) |>      # Sort the words
   slice(1:100)             # Take only the top 100 words
-wordcloud(words=words$word,freq=words$n,colors=brewer.pal(8,"Dark2"))
+JA_wordcloud <- wordcloud(words=words$word,freq=words$n,colors=brewer.pal(8,"Dark2"))
 
-## Use ggirl to send the wordcloud plot to my sister (we both really love Jane Austen)
-remotes::install_github("jnolis/ggirl")
-library(ggirl)                              # Got stuck here with installing - troubleshooting
+## Save plots to GitHub
+ggsave("Week_10/Outputs/JaneAusten_words_plot.png", plot=sent_word_plot)
+ggsave("Week_10/Outputs/JaneAusten_wordcloud.png",plot=JA_wordcloud)
