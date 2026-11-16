@@ -1,0 +1,12 @@
+name: ocn_682_-_ellie_s_jones_-_week_12_class_-_starsapp
+title: OCN 682 - Ellie S Jones - Week 12 Class - StarsApp
+username: ellieoftheocean
+account: ellieoftheocean
+server: connect.posit.cloud
+hostUrl: https://api.connect.posit.cloud/v1
+appId: 01a1c804-f6a2-66cf-21b7-02506d7a9bef
+bundleId:
+url: https://connect.posit.cloud/ellieoftheocean/content/01a1c804-f6a2-66cf-21b7-02506d7a9bef
+version: 1
+asMultiple: FALSE
+asStatic: FALSE

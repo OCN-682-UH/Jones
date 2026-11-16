@@ -1,0 +1,12 @@
+name: invasive_species_fisheries_landing_data_app
+title: Invasive Species Fisheries Landing Data App
+username: ellieoftheocean
+account: ellieoftheocean
+server: connect.posit.cloud
+hostUrl: https://api.connect.posit.cloud/v1
+appId: 01a1e6b5-47df-dfc5-4149-56ccef542f08
+bundleId:
+url: https://connect.posit.cloud/ellieoftheocean/content/01a1e6b5-47df-dfc5-4149-56ccef542f08
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
