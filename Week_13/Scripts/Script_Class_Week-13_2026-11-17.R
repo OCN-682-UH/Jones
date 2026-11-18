@@ -15,7 +15,7 @@ for(i in years){                   # i is the index
   print(paste("The year is",i))    # Loop over i
 }
 
-## To save a new vector with all the years you are loopoing, you need to pre-allocate space and tell R where it is going to be saved
+## To save a new vector with all the years you are looping, you need to pre-allocate space and tell R where it is going to be saved
 year_data <- tibble(year = rep(NA, length(years)),
                     year_name = rep(NA, length(years)))   # Create an empty dataframe called year_data with columns for year and year_name
 year_data
@@ -84,7 +84,7 @@ data <- files |>
   list_rbind(names_to = "filename") |>
   group_by(filename) |>
   summarise(mean_temp = mean(Temperature, na.rm=TRUE),
-            mean_sal = mean(Salinity, na.rm-TRUE))
+            mean_sal = mean(Salinity, na.rm=TRUE))
 data
 
 ## Shortcut: readr can read many files at once
@@ -128,3 +128,4 @@ for (i in seq_along(file_names)) {
          plot = p, width = 6, height = 4)
 }
 dir(here("Week_13", "output"), pattern = "_temp.png")
+
