@@ -1,0 +1,67 @@
+---
+title: "Iterative Programming Homework"
+author: "Ellie S Jones"
+date: "November 22, 2026"
+format:
+    html:
+      code-fold: true
+      code-summary: "Click here to display code"
+      theme: solar
+      
+warning: false
+message: false
+---
+
+In this homework, we will read in files collected in tide pools in Oregon by Jenn Fields and calcuate the mean and standard deviation of temperature and light in each tide pool.
+
+```{r}
+## Load libraries
+library(tidyverse)
+library(here)
+```
+
+```{r}
+## Bring in the four tide pool datasets
+CondPath <- here("Week_13","Data","homework")
+files <- dir(path = CondPath, pattern = ".csv", full.names = TRUE)
+files
+```
+
+```{r}
+## Read in all files as a single dataset
+TPdata <- files |>                    # Create a name for the dataset
+  set_names() |>
+  map(read_csv) |>                    # Read in all of the data at once with map
+  list_rbind(names_to = "filename")   # Add a column for the file name
+TPdata                                # View a tibble of the data
+```
+
+Now, we will use maps and for loops in purrr to calculate the mean and standard deviation of temperature and light in the tide pools.
+
+```{r}
+## Calculate the mean and standard deviation for temperature in each tide pool
+TPtemp <- files |> 
+  set_names() |>
+  map(read_csv) |> 
+  list_rbind(names_to = "filename") |>
+  group_by(filename) |>
+  summarise(mean_temp = mean(Temp.C, na.rm = TRUE),  # Calculate the mean of temperature
+            sd_temp = sd(Temp.C, na.rm = TRUE))      # Calculate the standard deviation of temperature
+TPtemp
+```
+```{r}
+## Calculate the mean and standard deviation for temperature in each tide pool
+TPlight <- files |> 
+  set_names() |>
+  map(read_csv) |> 
+  list_rbind(names_to = "filename") |>
+  group_by(filename) |>
+  summarise(mean_light = mean(Intensity.lux, na.rm = TRUE),   # Calculate the mean of light intensity
+            sd_light = sd(Intensity.lux, na.rm = TRUE))       # Calculate the standard deviation of light intensity
+TPlight
+```
+Now, we have data on the physical characteristics of the seawater in each tide pool! Yay!
+
+Also, because the tide pools in Oregon are one of my favorite places in the whole world, please enjoy this photo of me in a tide pool with a purple sponge circa 2018. (I wore the wetsuit so I could crawl/sit/submerge myself in the tide pools with more ease.)
+
+![Ellie in the tide pools near Sunset Beach on the Southern Oregon coast](tidepool_love.JPG)

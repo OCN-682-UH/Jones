@@ -8,7 +8,8 @@
 * [Week 7 Homework](https://01a1376f-5355-fc91-3fb6-49092cdf63fb.share.connect.posit.cloud/)
 * [Week 8 Homework](https://01a1583c-85f0-d8ab-2fc7-d2e0ecfe99d5.share.connect.posit.cloud/) 
 * [Week 9 Homework](https://01a17f2f-f35b-8674-f54a-803e5eba8332.share.connect.posit.cloud/)  
-* [Week 12 Homework](https://01a1e6c0-dc05-03f2-5002-3b1042cc3f79.share.connect.posit.cloud/)
+* [Week 12 Homework](https://01a1e6c0-dc05-03f2-5002-3b1042cc3f79.share.connect.posit.cloud/)  
+* [Week 13 Homework](https://01a206a5-5d23-3de1-d378-afce15446456.share.connect.posit.cloud/)
 
 ### My Research
 
