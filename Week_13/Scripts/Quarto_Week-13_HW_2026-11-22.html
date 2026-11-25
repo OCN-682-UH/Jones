@@ -127,13 +127,107 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
+<p>First, we will read in the datasets and create a for loop to calculate the mean and standard deviation of tide pool data.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Click here to display code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Bring in the four tide pool datasets</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>CondPath <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">"Week_13"</span>,<span class="st">"Data"</span>,<span class="st">"homework"</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>files <span class="ot">&lt;-</span> <span class="fu">dir</span>(<span class="at">path =</span> CondPath, <span class="at">pattern =</span> <span class="st">".csv"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>files</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Read in all datasets from one file</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>TidepoolPath <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">"Week_13"</span>,<span class="st">"Data"</span>,<span class="st">"homework"</span>)               <span class="co"># Create a path to point to the folder on the computer holding the tidepool datasets</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>TidepoolFiles <span class="ot">&lt;-</span> <span class="fu">dir</span>(<span class="at">path =</span> TidepoolPath, <span class="at">pattern =</span> <span class="st">".csv"</span>)     <span class="co"># List .csv files in that path</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>TidepoolFiles</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "TP1.csv" "TP2.csv" "TP3.csv" "TP4.csv"</code></pre>
+</div>
+<details class="code-fold">
+<summary>Click here to display code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>TidepoolPath</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "C:/Users/cjonees/Desktop/Repositories/Jones_OCN682/Week_13/Data/homework"</code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Click here to display code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Pre-allocate space for the loop, creating one row for each file and five columns</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>TidepoolData <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">filename =</span> <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="fu">length</span>(TidepoolFiles)),</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">mean_temp =</span> <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="fu">length</span>(TidepoolFiles)),</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">sd_temp =</span> <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="fu">length</span>(TidepoolFiles)),</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">mean_light =</span> <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="fu">length</span>(TidepoolFiles)),</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">sd_light =</span> <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="fu">length</span>(TidepoolFiles)))</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>TidepoolData</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 5
+  filename mean_temp sd_temp mean_light sd_light
+  &lt;lgl&gt;    &lt;lgl&gt;     &lt;lgl&gt;   &lt;lgl&gt;      &lt;lgl&gt;   
+1 NA       NA        NA      NA         NA      
+2 NA       NA        NA      NA         NA      
+3 NA       NA        NA      NA         NA      
+4 NA       NA        NA      NA         NA      </code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Click here to display code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Write and test the basic code by reading in the first file</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>TidepoolRaw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">paste0</span>(TidepoolPath,<span class="st">"/"</span>,TidepoolFiles[<span class="dv">1</span>]))</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(TidepoolRaw)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 7
+  PoolID Foundation_spp Removal_Control Date.Time    Temp.C Intensity.lux
+   &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt;           &lt;chr&gt;         &lt;dbl&gt;         &lt;dbl&gt;
+1      1 Phyllospadix   Control         6/16/19 0:01   10.2             0
+2      1 Phyllospadix   Control         6/16/19 0:16   10.1             0
+3      1 Phyllospadix   Control         6/16/19 0:31   10.2             0
+4      1 Phyllospadix   Control         6/16/19 0:46   10.1             0
+5      1 Phyllospadix   Control         6/16/19 1:01   10.1             0
+6      1 Phyllospadix   Control         6/16/19 1:16   10.1             0
+# ℹ 1 more variable: LoggerDepth &lt;dbl&gt;</code></pre>
+</div>
+<details class="code-fold">
+<summary>Click here to display code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>mean_temp <span class="ot">&lt;-</span> <span class="fu">mean</span>(TidepoolRaw<span class="sc">$</span>Temp.C,<span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>mean_temp</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 13.27092</code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Click here to display code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Create the for loop!</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="fu">seq_along</span>(TidepoolFiles)){</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  TidepoolRaw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">paste0</span>(TidepoolPath,<span class="st">"/"</span>,TidepoolFiles[i]))</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  TidepoolData<span class="sc">$</span>filename[i] <span class="ot">&lt;-</span> TidepoolFiles[i]</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  TidepoolData<span class="sc">$</span>mean_temp[i] <span class="ot">&lt;-</span> <span class="fu">mean</span>(TidepoolRaw<span class="sc">$</span>Temp.C,<span class="at">na.rm=</span><span class="cn">TRUE</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  TidepoolData<span class="sc">$</span>sd_temp[i] <span class="ot">&lt;-</span> <span class="fu">sd</span>(TidepoolRaw<span class="sc">$</span>Temp.C,<span class="at">na.rm=</span><span class="cn">TRUE</span>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  TidepoolData<span class="sc">$</span>mean_light[i] <span class="ot">&lt;-</span> <span class="fu">mean</span>(TidepoolRaw<span class="sc">$</span>Intensity.lux,<span class="at">na.rm=</span><span class="cn">TRUE</span>)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  TidepoolData<span class="sc">$</span>sd_light[i] <span class="ot">&lt;-</span> <span class="fu">sd</span>(TidepoolRaw<span class="sc">$</span>Intensity.lux,<span class="at">na.rm=</span><span class="cn">TRUE</span>)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>TidepoolData</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 5
+  filename mean_temp sd_temp mean_light sd_light
+  &lt;chr&gt;        &lt;dbl&gt;   &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt;
+1 TP1.csv       13.3    2.32       427.    1661.
+2 TP2.csv       13.2    2.31      5603.   11929.
+3 TP3.csv       13.1    2.32      5605.   12101.
+4 TP4.csv       13.2    2.27       655.    2089.</code></pre>
+</div>
+</div>
+<p>Next, we will perform the same functions using tidyverse map functions in purrr instead of Base R for loops.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Click here to display code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Bring in the four tide pool datasets for use in mapping</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>TPPath <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">"Week_13"</span>,<span class="st">"Data"</span>,<span class="st">"homework"</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>files <span class="ot">&lt;-</span> <span class="fu">dir</span>(<span class="at">path =</span> TPPath, <span class="at">pattern =</span> <span class="st">".csv"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>files</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "C:/Users/cjonees/Desktop/Repositories/Jones_OCN682/Week_13/Data/homework/TP1.csv"
@@ -145,12 +239,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Click here to display code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Read in all files as a single dataset</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>TPdata <span class="ot">&lt;-</span> files <span class="sc">|&gt;</span>                    <span class="co"># Create a name for the dataset</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_names</span>() <span class="sc">|&gt;</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(read_csv) <span class="sc">|&gt;</span>                    <span class="co"># Read in all of the data at once with map</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list_rbind</span>(<span class="at">names_to =</span> <span class="st">"filename"</span>)   <span class="co"># Add a column for the file name</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>TPdata                                <span class="co"># View a tibble of the data</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Read in all files as a single dataset</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>TPdata <span class="ot">&lt;-</span> files <span class="sc">|&gt;</span>                    <span class="co"># Create a name for the dataset</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_names</span>() <span class="sc">|&gt;</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(read_csv) <span class="sc">|&gt;</span>                    <span class="co"># Read in all of the data at once with map</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list_rbind</span>(<span class="at">names_to =</span> <span class="st">"filename"</span>)   <span class="co"># Add a column for the file name</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>TPdata                                <span class="co"># View a tibble of the data</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 23,922 × 8
@@ -174,15 +268,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Click here to display code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Calculate the mean and standard deviation for temperature in each tide pool</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>TPtemp <span class="ot">&lt;-</span> files <span class="sc">|&gt;</span> </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_names</span>() <span class="sc">|&gt;</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(read_csv) <span class="sc">|&gt;</span> </span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list_rbind</span>(<span class="at">names_to =</span> <span class="st">"filename"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(filename) <span class="sc">|&gt;</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_temp =</span> <span class="fu">mean</span>(Temp.C, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),  <span class="co"># Calculate the mean of temperature</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd_temp =</span> <span class="fu">sd</span>(Temp.C, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))      <span class="co"># Calculate the standard deviation of temperature</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>TPtemp</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Calculate the mean and standard deviation for temperature in each tide pool</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>TPtemp <span class="ot">&lt;-</span> files <span class="sc">|&gt;</span> </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_names</span>() <span class="sc">|&gt;</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(read_csv) <span class="sc">|&gt;</span> </span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list_rbind</span>(<span class="at">names_to =</span> <span class="st">"filename"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(filename) <span class="sc">|&gt;</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_temp =</span> <span class="fu">mean</span>(Temp.C, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),  <span class="co"># Calculate the mean of temperature</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd_temp =</span> <span class="fu">sd</span>(Temp.C, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))      <span class="co"># Calculate the standard deviation of temperature</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>TPtemp</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 3
@@ -197,15 +291,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Click here to display code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Calculate the mean and standard deviation for temperature in each tide pool</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>TPlight <span class="ot">&lt;-</span> files <span class="sc">|&gt;</span> </span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_names</span>() <span class="sc">|&gt;</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(read_csv) <span class="sc">|&gt;</span> </span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list_rbind</span>(<span class="at">names_to =</span> <span class="st">"filename"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(filename) <span class="sc">|&gt;</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_light =</span> <span class="fu">mean</span>(Intensity.lux, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),   <span class="co"># Calculate the mean of light intensity</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd_light =</span> <span class="fu">sd</span>(Intensity.lux, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))       <span class="co"># Calculate the standard deviation of light intensity</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>TPlight</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Calculate the mean and standard deviation for temperature in each tide pool</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>TPlight <span class="ot">&lt;-</span> files <span class="sc">|&gt;</span> </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_names</span>() <span class="sc">|&gt;</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(read_csv) <span class="sc">|&gt;</span> </span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list_rbind</span>(<span class="at">names_to =</span> <span class="st">"filename"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(filename) <span class="sc">|&gt;</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_light =</span> <span class="fu">mean</span>(Intensity.lux, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),   <span class="co"># Calculate the mean of light intensity</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd_light =</span> <span class="fu">sd</span>(Intensity.lux, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))       <span class="co"># Calculate the standard deviation of light intensity</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>TPlight</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 3

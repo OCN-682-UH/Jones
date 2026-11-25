@@ -20,10 +20,51 @@ library(tidyverse)
 library(here)
 ```
 
+First, we will read in the datasets and create a for loop to calculate the mean and standard deviation of tide pool data. 
 ```{r}
-## Bring in the four tide pool datasets
-CondPath <- here("Week_13","Data","homework")
-files <- dir(path = CondPath, pattern = ".csv", full.names = TRUE)
+## Read in all datasets from one file
+TidepoolPath <- here("Week_13","Data","homework")               # Create a path to point to the folder on the computer holding the tidepool datasets
+TidepoolFiles <- dir(path = TidepoolPath, pattern = ".csv")     # List .csv files in that path
+TidepoolFiles
+TidepoolPath
+```
+
+```{r}
+## Pre-allocate space for the loop, creating one row for each file and five columns
+TidepoolData <- tibble(filename = rep(NA, length(TidepoolFiles)),
+                    mean_temp = rep(NA, length(TidepoolFiles)),
+                    sd_temp = rep(NA, length(TidepoolFiles)),
+                    mean_light = rep(NA, length(TidepoolFiles)),
+                    sd_light = rep(NA, length(TidepoolFiles)))
+TidepoolData
+```
+
+```{r}
+## Write and test the basic code by reading in the first file
+TidepoolRaw <- read_csv(paste0(TidepoolPath,"/",TidepoolFiles[1]))
+head(TidepoolRaw)
+mean_temp <- mean(TidepoolRaw$Temp.C,na.rm = TRUE)
+mean_temp
+```
+
+```{r}
+## Create the for loop!
+for(i in seq_along(TidepoolFiles)){
+  TidepoolRaw <- read_csv(paste0(TidepoolPath,"/",TidepoolFiles[i]))
+  TidepoolData$filename[i] <- TidepoolFiles[i]
+  TidepoolData$mean_temp[i] <- mean(TidepoolRaw$Temp.C,na.rm=TRUE)
+  TidepoolData$sd_temp[i] <- sd(TidepoolRaw$Temp.C,na.rm=TRUE)
+  TidepoolData$mean_light[i] <- mean(TidepoolRaw$Intensity.lux,na.rm=TRUE)
+  TidepoolData$sd_light[i] <- sd(TidepoolRaw$Intensity.lux,na.rm=TRUE)
+}
+TidepoolData
+```
+
+Next, we will perform the same functions using tidyverse map functions in purrr instead of Base R for loops.
+```{r}
+## Bring in the four tide pool datasets for use in mapping
+TPPath <- here("Week_13","Data","homework")
+files <- dir(path = TPPath, pattern = ".csv", full.names = TRUE)
 files
 ```
 
